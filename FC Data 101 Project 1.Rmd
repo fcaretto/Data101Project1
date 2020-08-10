@@ -1,0 +1,11 @@
+---
+title: "FC Data 101 Project 1"
+author: "Fiona Caretto"
+date: "8/10/2020"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+```
+
