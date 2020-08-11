@@ -1,0 +1,125 @@
+---
+title: "Data101Project1"
+output: html_document
+---
+
+
+
+```{r}
+setwd("/cloud/project/")
+```
+
+```{r}
+install.packages("tidyverse")
+```
+
+```{r}
+library(tidyverse)
+library(readr)
+cars <- read_csv("cars2.csv")
+```
+
+```{r}
+str(cars)
+```
+
+```{r}
+head(cars)
+```
+
+```{r}
+tail(cars)
+```
+
+```{r}
+manufacturer <- group_by(cars, manufacturer_name)
+```
+
+```{r}
+summarize(manufacturer, price_usd = mean(price_usd, na.rm = TRUE))
+```
+
+```{r}
+df_manufacturer <- cars %>% 
+select(manufacturer_name, price_usd) %>%
+group_by(manufacturer_name) %>%
+summarise_all(funs(mean))
+df_manufacturer
+```
+
+```{r}
+df_manufacturer_desc <- df_manufacturer %>%
+  arrange(desc(price_usd))
+df_manufacturer_desc
+```
+```{r}
+df_transmission <- cars %>% 
+select(transmission, price_usd) %>%
+group_by(transmission) %>%
+summarise_all(funs(mean))
+df_transmission
+```
+
+```{r}
+df_year <- cars %>% 
+select(year_produced, price_usd) %>%
+group_by(year_produced) %>%
+summarise_all(funs(mean))
+df_year
+```
+
+
+```{r}
+df_year_desc <- df_year %>%
+  arrange(desc(price_usd))
+df_year_desc
+```
+
+
+```{r}
+df_model <- cars %>% 
+select(model_name, price_usd) %>%
+group_by(model_name) %>%
+summarise_all(funs(mean))
+df_model
+```
+```{r}
+tail(df_model, n = 50)
+```
+
+```{r}
+df_model_desc <- df_model %>%
+  arrange(desc(price_usd))
+df_model_desc
+```
+
+
+
+```{r}
+df_color <- cars %>% 
+select(color, price_usd) %>%
+group_by(color) %>%
+summarise_all(funs(mean))
+df_color
+```
+
+
+```{r}
+df_color_desc <- df_color %>%
+  arrange(desc(price_usd))
+df_color_desc
+```
+
+
+
+
+```{r}
+mean_jeep <- 10912.4894
+mean_wrangler <- 18840.7700
+mean_2007 <- 8075.335
+mean_black <- 9219.778
+mean_manual <- 4467.64
+sum(mean_jeep, mean_wrangler, mean_2007, mean_black, mean_manual)
+sum(mean_jeep, mean_wrangler, mean_2007, mean_black, mean_manual) / 5
+```
+
