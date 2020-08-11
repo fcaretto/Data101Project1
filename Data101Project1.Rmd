@@ -5,6 +5,16 @@ output: html_document
 
 
 
+
+#### For this project, I used a dataset I found on Kaggle (https://www.kaggle.com/lepchenkov/usedcarscatalog), which looks at 30 different aspects of used cars being offered for sale. The data were scraped from Belarus on December 2, 2019. 
+
+
+
+##### I chose to focus solely on a handful of variables from this dataset: manufacturer, model, year, transmission and color.
+
+##### Some questions I had were: Which car manufacturers are worth more, used, on average? Is there a certain transmission type worth more than the other on average? Which years of cars are worth the most on average? Are specific colors of cars worth more than others on average? Most importantly, as someone who owns a used car, and would be highly interested in selling said used car, I wanted to see if my chances of selling my 2007 black Jeep Wrangler with a manual transmission for a reasonable price were good.
+
+
 ```{r}
 setwd("/cloud/project/")
 ```
@@ -13,31 +23,47 @@ setwd("/cloud/project/")
 install.packages("tidyverse")
 ```
 
+
+##### Here, I load in the dataset using read_csv. 
+
+##### Before loading the dataset into RStudio Cloud, I removed the "location_region" column in Excel, because it contained random and strange symbols that I didn't want to create issues when I tried to read it into RStudio, so the dataset now contains 29 variables.
+
+
 ```{r}
 library(tidyverse)
 library(readr)
 cars <- read_csv("cars2.csv")
 ```
 
+
+##### Let's take a look at the structure of the data.
+
+
 ```{r}
 str(cars)
 ```
+
+
+
+##### Let's look at the first 6 rows.
+
 
 ```{r}
 head(cars)
 ```
 
+
+##### And the last 6 rows.
+
+
+
 ```{r}
 tail(cars)
 ```
 
-```{r}
-manufacturer <- group_by(cars, manufacturer_name)
-```
 
-```{r}
-summarize(manufacturer, price_usd = mean(price_usd, na.rm = TRUE))
-```
+##### Next, I used dplyr to select the columns of manufacturer_name and price_usd, group by manufacturer_name, and take the means. I called this new data frame "df_manufacturer".
+
 
 ```{r}
 df_manufacturer <- cars %>% 
@@ -47,11 +73,24 @@ summarise_all(funs(mean))
 df_manufacturer
 ```
 
+
+##### For the purposes of my project, I wanted to see which manufacturers were worth more on average, so I arranged df_manufacturer in descening order.
+
+
 ```{r}
 df_manufacturer_desc <- df_manufacturer %>%
   arrange(desc(price_usd))
 df_manufacturer_desc
 ```
+
+##### As we can see, the top 3 highest selling manufactureres on average are Porsche, Jaguar and Lexus. Sadly, Jeep was not one of the top 10 highest values. But it was number 11, which isn't too shabby!
+
+
+
+
+##### Next, I used dplyr again to select the columns of transmission and price_usd, group by transmission, and take the means. I called this new data frame "df_transmission".
+
+
 ```{r}
 df_transmission <- cars %>% 
 select(transmission, price_usd) %>%
@@ -59,6 +98,16 @@ group_by(transmission) %>%
 summarise_all(funs(mean))
 df_transmission
 ```
+
+##### Right away, we can see that having a manual transmission isn't ideal when selling a used car. Automatic transmissions, on average, sell for over twice as much!
+
+
+
+
+
+##### Next, I used dplyr to select the columns of year_produced and price_usd, group by year_produced, and take the means. I called this new data frame "df_year".
+
+
 
 ```{r}
 df_year <- cars %>% 
@@ -68,12 +117,20 @@ summarise_all(funs(mean))
 df_year
 ```
 
+##### Again, I used the arrange function to look at the years in order of descending price.
+
 
 ```{r}
 df_year_desc <- df_year %>%
   arrange(desc(price_usd))
 df_year_desc
 ```
+
+##### The values seem to follow a chronological pattern, with the newer the car the higher the value, with the exception of 1942 ranking second! Maybe I just have to wait a couple decades...
+
+
+
+##### Next, I used dplyr again to select the columns of model_name and price_usd, group by model_name, and take the means. I called this new data frame "df_model".
 
 
 ```{r}
@@ -83,15 +140,27 @@ group_by(model_name) %>%
 summarise_all(funs(mean))
 df_model
 ```
+
+
+##### Assuming Wrangler wouldn't be near the top, I saved myself some time by using the tail function, with n = 50, to find the average Wrangler value.
+
+
 ```{r}
 tail(df_model, n = 50)
 ```
+
+##### I wanted to see which models were the most valuable on average, so again I arranged them in descencing order of price_usd.
+
 
 ```{r}
 df_model_desc <- df_model %>%
   arrange(desc(price_usd))
 df_model_desc
 ```
+
+
+
+##### Next, I used dplyr to select the columns of color and price_usd, group by color, and take the means. I called this new data frame "df_color".
 
 
 
@@ -104,6 +173,10 @@ df_color
 ```
 
 
+##### I used arrange to list them in descending order of value, and hooray! Black was second highest value color on average. I didn't know so many people loved brown cars...
+
+
+
 ```{r}
 df_color_desc <- df_color %>%
   arrange(desc(price_usd))
@@ -111,6 +184,7 @@ df_color_desc
 ```
 
 
+##### Finally, in my own way of inaccurately calculating my car's resale value, I added together the mean values of Jeep's, Wrangler's, 2007 cars, black cars and manual transmission cars, and found that on average, a car like my own would sell for $10,303.20! What a dream come true that would be.
 
 
 ```{r}
